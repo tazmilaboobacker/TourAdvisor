@@ -173,13 +173,22 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");  // Store uploaded files in the 'uploads' folder
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));  // Unique filenames with timestamp
-  },
+    const originalName = file.originalname.split('.')[0]; // Get the original file name without the extension
+    const timestamp = Date.now(); // Get the current timestamp
+    const fileExtension = path.extname(file.originalname); // Get the file extension
+  
+    // Combine the original file name and the timestamp, followed by the file extension
+    cb(null, `${originalName}-${timestamp}${fileExtension}`);
+  }
+  
+  // filename: (req, file, cb) => {
+  //   cb(null, Date.now() + path.extname(file.originalname));  // Unique filenames with timestamp
+  // },
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },  // Limit file size to 5MB
+  limits: { fileSize: 15 * 1024 * 1024 },  // Limit file size to 5MB
 });
 
 // MongoDB connection
